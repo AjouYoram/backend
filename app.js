@@ -32,6 +32,9 @@ app.get('/', (req, res) => {
     res.send('Hello JWT')
 })
 
+// configure api router
+app.use('/api', require('./routes/api'))
+
 // open the server
 app.listen(port, () => {
     console.log(`Express is running on port ${port}`)
@@ -42,7 +45,7 @@ app.listen(port, () => {
 /* =======================
     CONNECT TO MONGODB SERVER
 ==========================*/
-mongoose.connect(config.mongodbUri)
+mongoose.connect(config.mongodbUri, {useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
 const db = mongoose.connection
 db.on('error', console.error)
 db.once('open', ()=>{
