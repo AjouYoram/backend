@@ -24,7 +24,7 @@ exports.register = (req, res) => {
     // count the number of the user
     const count = (user) => {
         newUser = user
-        return User.count({}).exec()
+        return User.countDocuments({}).exec()
     }
 
     // assign admin if count is 1
