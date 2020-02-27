@@ -13,14 +13,13 @@ exports.list = (req, res) => {
     }
 
     User.find({})
-    .then(
-        users=> {
-            res.json({users})
-        }
-    )
+        .then(
+            users=> {
+                res.json({users})
+            }
+        )
 
 }
-
 
 /*
     POST /api/user/assign-admin/:username
@@ -35,11 +34,11 @@ exports.assignAdmin = (req, res) => {
     }
 
     User.findOneByUsername(req.params.username)
-    .then(
-        user => user.assignAdmin()
-    ).then(
-        res.json({
-            success: true
-        })
-    )
+        .then(
+            user => user.assignAdmin()
+        ).then(
+            res.json({
+                success: true
+            })
+        )
 }

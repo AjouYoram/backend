@@ -9,14 +9,21 @@ const User = new Schema({
     admin: { type: Boolean, default: false }
 })
 
+
+// crypto.createHmac('sha1', 'secret')
+//              .update('mypasswssord')
+//              .digest('base64')
+
+
 // create new User document
 User.statics.create = function(username, password) {
     const encrypted = crypto.createHmac('sha1', config.secret)
                       .update(password)
                       .digest('base64')
+
     const user = new this({
         username,
-        password
+        password: encrypted
     })
 
     // return the Promise
@@ -30,13 +37,14 @@ User.statics.findOneByUsername = function(username) {
     }).exec()
 }
 
-
 // verify the password of the User documment
 User.methods.verify = function(password) {
     const encrypted = crypto.createHmac('sha1', config.secret)
                       .update(password)
                       .digest('base64')
-    return this.password === password
+    console.log(this.password === encrypted)
+
+    return this.password === encrypted
 }
 
 User.methods.assignAdmin = function() {

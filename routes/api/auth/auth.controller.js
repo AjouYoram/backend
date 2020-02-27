@@ -77,7 +77,7 @@ exports.login = (req, res) => {
   const check = (user) => {
       if(!user) {
           // user does not exist
-          throw new Error('login failed')
+          throw new Error('login failed1')
       } else {
           // user exists, check the password
           if(user.verify(password)) {
@@ -101,7 +101,7 @@ exports.login = (req, res) => {
               })
               return p
           } else {
-              throw new Error('login failed')
+              throw new Error('login failed2')
           }
       }
   }
