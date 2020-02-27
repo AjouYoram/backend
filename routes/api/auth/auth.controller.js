@@ -92,7 +92,7 @@ exports.login = (req, res) => {
                       secret, 
                       {
                           expiresIn: '7d',
-                          issuer: 'shhan',
+                          issuer: 'https://github.com/shhan730',
                           subject: 'userInfo'
                       }, (err, token) => {
                           if (err) reject(err)
