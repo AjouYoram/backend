@@ -8,4 +8,6 @@ router.post('/login', controller.login)
 router.use('/check', authMiddleware)
 router.get('/check', controller.check)
 
+router.post('/email', controller.email)
+
 module.exports = router

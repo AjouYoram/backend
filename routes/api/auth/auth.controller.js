@@ -1,4 +1,5 @@
 const User = require('../../../models/user')
+const Email = require('../../../models/email')
 const jwt = require('jsonwebtoken')
 /*
     POST /api/auth
@@ -138,4 +139,45 @@ exports.check = (req, res) => {
       success: true,
       info: req.decoded
   })
+}
+
+/*
+    POST /api/auth/email
+    {
+        emailID
+    }
+*/
+
+exports.email = (req, res) => {
+    const emailID = req.body.emailID
+
+    // create a new user if does not exist
+    const check = (user) => {
+        if(user) {
+            throw new Error('username exists')
+        }
+    }
+
+    const create = () => {
+        return Email.create(emailID)
+    }
+
+    const respond = () => {
+        res.json({
+            message: 'success',
+        })
+    }
+
+    const onError = (error) => {
+        res.status(409).json({
+            message: error.message
+        })
+    }
+
+    User.findOneByUsername(emailID)
+    .then(check)
+    .then(create)
+    .then(respond)
+    .catch(onError)
+    
 }
