@@ -20,8 +20,6 @@ Email.statics.create = function(emailID) {
     token
   })
 
-
-
   // return the Promise
   return email.save()
 }
