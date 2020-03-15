@@ -1,6 +1,8 @@
 const User = require('../../../models/user')
 const Email = require('../../../models/email')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
+const config = require('../../../config');
 
 /*
     POST /api/auth
@@ -163,6 +165,29 @@ exports.email = (req, res) => {
         return Email.create(emailID)
     }
 
+    const sendEmail = ({save, token}) => {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: config.gmailID,
+              pass: config.gmailPW
+            }
+          });
+        
+          let mailOptions = {
+            from: config.gmailID,    // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+            to: emailID,                     // 수신 메일 주소
+            subject: '[아주요람]이메일 인증',   // 제목
+            html: '<p>인증코드를 입력해주세요</p>' + '<h1>인증코드: ' + token + '</h1>'
+          };
+        
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) throw new Error(error);
+            else console.log('Email sent: ' + info.response);
+          });
+          return save;
+    }
+
     const respond = () => {
         res.json({
             message: 'success',
@@ -178,7 +203,23 @@ exports.email = (req, res) => {
     User.findOneByUsername(emailID)
     .then(check)
     .then(create)
+    .then(sendEmail)
     .then(respond)
     .catch(onError)
     
+}
+
+/*
+    POST /api/auth/verifyEmail
+    {
+        emailID,
+        token
+    }
+*/
+
+exports.verifyEmail = (req,res) => {
+    const emailId = req.body.emailID;
+    const token = req.body.token;
+
+
 }
