@@ -1,6 +1,9 @@
 const User = require('../../../models/user')
 const Email = require('../../../models/email')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer');
+const config = require('../config');
+
 /*
     POST /api/auth
     {
@@ -154,12 +157,34 @@ exports.email = (req, res) => {
     // create a new user if does not exist
     const check = (user) => {
         if(user) {
-            throw new Error('username exists')
+            throw new Error('ID exists')
         }
     }
 
     const create = () => {
         return Email.create(emailID)
+    }
+
+    const send = () => {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: config.gmailID,
+              pass: config.gamilPW
+            }
+          });
+        
+          let mailOptions = {
+            from: config.gmailID,    // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
+            to: emailID,                     // 수신 메일 주소
+            subject: '[아주요람]이메일 인증',   // 제목
+            html: '<p>인증코드를 입력해주세요</p>' + '<h1>인증코드: ' + code + '</h1>'
+          };
+        
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) console.log(error);
+            else console.log('Email sent: ' + info.response);
+          });
     }
 
     const respond = () => {
@@ -177,6 +202,7 @@ exports.email = (req, res) => {
     User.findOneByUsername(emailID)
     .then(check)
     .then(create)
+    ,then(send)
     .then(respond)
     .catch(onError)
     

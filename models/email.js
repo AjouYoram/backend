@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const crypto = require('crypto')
-const config = require('../config')
+const mail = require('../middlewares/mail')
 
 const Email = new Schema({
     emailID: String,
