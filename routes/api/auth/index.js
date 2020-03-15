@@ -10,4 +10,6 @@ router.get('/check', controller.check)
 
 router.post('/email', controller.email)
 
+router.post('/verifyEmail',controller.verifyEmail)
+
 module.exports = router

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const crypto = require('crypto')
-const nodemailer = require('nodemailer')
-const config = require('../config');
 
 const Email = new Schema({
     emailID: String,
@@ -25,5 +23,17 @@ Email.statics.create = function(emailID) {
   const save = email.save()
   return {save, token}
 }
+
+Email.statics.findOneByEmailID = function(emailID) {
+  return this.findOne({
+      emailID
+  }).exec()
+}
+
+Email.methods.verify = function(token) {
+  return this.token === token
+}
+
+
 
 module.exports = mongoose.model('Email', Email)

@@ -221,5 +221,34 @@ exports.verifyEmail = (req,res) => {
     const emailId = req.body.emailID;
     const token = req.body.token;
 
+    const check = (email) => {
+        if(!email) {
+            // user does not exist
+            throw new Error('Email 전송오류')
+        } else {
+            // user exists, check the password
+            if(email.verify(token)) {
+                return;
+            }else{
+                throw new Error('token 인증오류')
+            }
+        }
+    }
+    
+    const respond = () => {
+        res.json({
+            message: '인증성공',
+        })
+    }
 
+    const onError = (error) => {
+        res.status(409).json({
+            message: error.message
+        })
+    }
+
+    Email.findOneByEmailID(emailId)
+    .then(check)
+    .then(respond)
+    .catch(onError)
 }
