@@ -7,21 +7,21 @@ const config = require('../../../config');
 /*
     POST /api/auth
     {
-        username,
+        emailID,
         password
     }
 */
 
 exports.register = (req, res) => {
-    const { username, password } = req.body
+    const { emailID, password } = req.body
     let newUser = null
 
     // create a new user if does not exist
     const create = (user) => {
         if(user) {
-            throw new Error('username exists')
+            throw new Error('ID exists')
         } else {
-            return User.create(username, password)
+            return User.create(emailID, password)
         }
     }
 
@@ -49,15 +49,15 @@ exports.register = (req, res) => {
       })
   }
 
-  // run when there is an error (username exists)
+  // run when there is an error (ID exists)
   const onError = (error) => {
       res.status(409).json({
           message: error.message
       })
   }
 
-  // check username duplication
-  User.findOneByUsername(username)
+  // check ID duplication
+  User.findOneByEmailID(emailID)
   .then(create)
   .then(count)
   .then(assign)
@@ -68,13 +68,13 @@ exports.register = (req, res) => {
 /*
     POST /api/auth/login
     {
-        username,
+        emailID,
         password
     }
 */
 
 exports.login = (req, res) => {
-  const {username, password} = req.body
+  const {emailID, password} = req.body
   const secret = req.app.get('jwt-secret')
 
   // check the user info & generate the jwt
@@ -90,7 +90,7 @@ exports.login = (req, res) => {
                   jwt.sign(
                       {
                           _id: user._id,
-                          username: user.username,
+                          emailID: user.emailID,
                           admin: user.admin
                       }, 
                       secret, 
@@ -126,7 +126,7 @@ exports.login = (req, res) => {
   }
 
   // find the user
-  User.findOneByUsername(username)
+  User.findOneByEmailID(emailID)
   .then(check)
   .then(respond)
   .catch(onError)
@@ -200,7 +200,7 @@ exports.email = (req, res) => {
         })
     }
 
-    User.findOneByUsername(emailID)
+    User.findOneByEmailID(emailID)
     .then(check)
     .then(create)
     .then(sendEmail)
@@ -251,4 +251,22 @@ exports.verifyEmail = (req,res) => {
     .then(check)
     .then(respond)
     .catch(onError)
+}
+
+/*
+    POST /api/auth/resetPW
+    {
+        emailID,
+        password
+    }
+*/
+
+exports.resetPW = (req,res) => {
+    const emailID = req.body.emailID;
+    const password = req.body.password;
+
+
+    //User.findOneByEmailID
+
+    //User.findOneByUsername()
 }

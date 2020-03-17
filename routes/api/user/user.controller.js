@@ -22,7 +22,7 @@ exports.list = (req, res) => {
 }
 
 /*
-    POST /api/user/assign-admin/:username
+    POST /api/user/assign-admin/:emailID
 */
 
 exports.assignAdmin = (req, res) => {
@@ -33,7 +33,7 @@ exports.assignAdmin = (req, res) => {
         })
     }
 
-    User.findOneByUsername(req.params.username)
+    User.findOneByEmailID(req.params.emailID)
         .then(
             user => user.assignAdmin()
         ).then(
